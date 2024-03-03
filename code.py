@@ -1,4 +1,4 @@
-import board, busio, displayio, os, time
+import board, busio, displayio, os, time, digitalio
 import adafruit_displayio_ssd1306
 import triangle
 import Main
@@ -8,6 +8,57 @@ renderer = Main.gl(128,64, 55, 1000, 0.1)
 cube = Main.object(model,0,0,1,0,35,0, 3, 3, 3, None)
 
 renderer.camera_absolute(_camera_x = 0, _camera_y = 0, _camera_z = 10, _camera_angle_x = 0, _camera_angle_y = 0, _camera_angle_z = 0)
+
+speed = 0.5
+rot = 10
+
+y = digitalio.DigitalInOut(board.GP16)
+y.direction = digitalio.Direction.INPUT
+y.pull = digitalio.Pull.UP
+
+dy = digitalio.DigitalInOut(board.GP17)
+dy.direction = digitalio.Direction.INPUT
+dy.pull = digitalio.Pull.UP
+
+x = digitalio.DigitalInOut(board.GP18)
+x.direction = digitalio.Direction.INPUT
+x.pull = digitalio.Pull.UP
+
+dx = digitalio.DigitalInOut(board.GP19)
+dx.direction = digitalio.Direction.INPUT
+dx.pull = digitalio.Pull.UP
+
+z = digitalio.DigitalInOut(board.GP20)
+z.direction = digitalio.Direction.INPUT
+z.pull = digitalio.Pull.UP
+
+dz = digitalio.DigitalInOut(board.GP21)
+dz.direction = digitalio.Direction.INPUT
+dz.pull = digitalio.Pull.UP
+
+ay = digitalio.DigitalInOut(board.GP10)
+ay.direction = digitalio.Direction.INPUT
+ay.pull = digitalio.Pull.UP
+
+day = digitalio.DigitalInOut(board.GP11)
+day.direction = digitalio.Direction.INPUT
+day.pull = digitalio.Pull.UP
+
+ax = digitalio.DigitalInOut(board.GP12)
+ax.direction = digitalio.Direction.INPUT
+ax.pull = digitalio.Pull.UP
+
+dax = digitalio.DigitalInOut(board.GP13)
+dax.direction = digitalio.Direction.INPUT
+dax.pull = digitalio.Pull.UP
+
+az = digitalio.DigitalInOut(board.GP14)
+az.direction = digitalio.Direction.INPUT
+az.pull = digitalio.Pull.UP
+
+daz = digitalio.DigitalInOut(board.GP15)
+daz.direction = digitalio.Direction.INPUT
+daz.pull = digitalio.Pull.UP
 
 SCREEN_WIDTH = 128
 SCREEN_HEIGHT = 64
@@ -48,7 +99,31 @@ while True:
     if last_update_time + FPS_DELAY <= now:
         splash = displayio.Group()
         triangles = renderer.new_frame()
-        renderer.move_camera(_camera_angle_z = 1, _camera_angle_y=2)
+        if not x.value:
+            renderer.move_camera(_camera_x=speed)
+        if not y.value:
+            renderer.move_camera(_camera_y=speed)
+        if not z.value:
+            renderer.move_camera(_camera_z=speed)
+        if not dx.value:
+            renderer.move_camera(_camera_x=-speed)
+        if not dy.value:
+            renderer.move_camera(_camera_y=-speed)
+        if not dz.value:
+            renderer.move_camera(_camera_z=-speed)
+
+        if not ax.value:
+            renderer.move_camera(_camera_angle_x=rot)
+        if not ay.value:
+            renderer.move_camera(_camera_angle_y=rot)
+        if not az.value:
+            renderer.move_camera(_camera_angle_z=rot)
+        if not dax.value:
+            renderer.move_camera(_camera_angle_x=-rot)
+        if not day.value:
+            renderer.move_camera(_camera_angle_y=-rot)
+        if not daz.value:
+            renderer.move_camera(_camera_angle_z=-rot)
         for tri in triangles:
             splash.append(triangle.Triangle(tri[0], tri[1], tri[2], tri[3], tri[4], tri[5],outline=0xFFFFFF))
             pass
