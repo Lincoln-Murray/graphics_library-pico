@@ -1,5 +1,7 @@
 # Minimal Graphics library
 
+# unmaintained
+
 ## Table of Contents
 
 + [About](#about)
